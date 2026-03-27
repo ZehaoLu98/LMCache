@@ -40,7 +40,7 @@ If you have vLLM's serving benchmark tool, you can run the following command to 
 
 ```bash
 vllm bench serve --port 9100 --seed $(date +%s) \
-    --model meta-llama/Llama-3.1-8B-Instruct \
+    --model deepseek-ai/DeepSeek-R1-Distill-Qwen-7B \
     --dataset-name random --random-input-len 7500 --random-output-len 200 \
     --num-prompts 30 --burstiness 100 --request-rate 1 --ignore-eos
 ```

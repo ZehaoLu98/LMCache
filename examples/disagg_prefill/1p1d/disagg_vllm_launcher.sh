@@ -11,8 +11,8 @@ if [[ $# -lt 1 ]]; then
 fi
 
 if [[ $# -eq 1 ]]; then
-    echo "Using default model: meta-llama/Llama-3.1-8B-Instruct"
-    MODEL="meta-llama/Llama-3.1-8B-Instruct"
+    echo "Using default model: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+    MODEL="deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
 else
     echo "Using model: $2"
     MODEL=$2
@@ -30,17 +30,12 @@ if [[ $1 == "prefiller" ]]; then
         CUDA_VISIBLE_DEVICES=${PREFILLER_DEVICE_ID:-0} \
         vllm serve $MODEL \
         --port 7100 \
-        --disable-log-requests \
         --enforce-eager \
         --no-enable-prefix-caching \
         --kv-transfer-config \
         '{"kv_connector":"LMCacheConnectorV1","kv_role":"kv_producer","kv_connector_extra_config": {"discard_partial_chunks": false, "lmcache_rpc_port": "producer1"}}'
 
-
-
-
 elif [[ $1 == "decoder" ]]; then
-    # Decoder listens on port 7200
     decode_config_file=$SCRIPT_DIR/configs/lmcache-decoder-config.yaml
 
     UCX_TLS=cuda_ipc,cuda_copy,tcp \
@@ -50,7 +45,6 @@ elif [[ $1 == "decoder" ]]; then
         CUDA_VISIBLE_DEVICES=${DECODER_DEVICE_ID:-1} \
         vllm serve $MODEL \
         --port 7200 \
-        --disable-log-requests \
         --enforce-eager \
         --no-enable-prefix-caching \
         --kv-transfer-config \
